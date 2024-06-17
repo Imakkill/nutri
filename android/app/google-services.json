@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191006655550",
+    "project_id": "nutriplus-b5190",
+    "storage_bucket": "nutriplus-b5190.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191006655550:android:9306a3aa83183b6eccfd6f",
+        "android_client_info": {
+          "package_name": "com.example.nutriplus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzGVL0ZAAX4fsm9SrxCZkCgPm4g_zDmFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
