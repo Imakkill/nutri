@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
@@ -46,11 +47,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _signIn(String email, String password) async {
     try {
-      await _authService.signIn(email, password);
+      UserCredential userCredential =
+          await _authService.signIn(email, password);
 
-      // Navegação para a tela principal após login bem-sucedido
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/home');
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .get();
+      bool isNutritionist = userDoc['isNutritionist'];
+
+      // Navegação para a tela apropriada após login bem-sucedido
+      // Use o operador `async` para aguardar a navegação ser concluída
+      await Future.microtask(() => Navigator.pushReplacementNamed(
+            context,
+            isNutritionist ? '/nutritionistHome' : '/patientHome',
+          ));
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.code);
     } catch (e) {
