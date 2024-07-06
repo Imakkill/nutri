@@ -6,26 +6,32 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _nameController = TextEditingController();
   bool _isNutritionist = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _nameController.dispose();
     super.dispose();
   }
 
   Future<void> _register() async {
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
         UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -42,14 +48,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'isNutritionist': _isNutritionist,
         });
 
-        // Navegar para a tela apropriada após o cadastro
+        if (!mounted) return;
         Navigator.pushReplacementNamed(
             context, _isNutritionist ? '/nutritionistHome' : '/patientHome');
       } on FirebaseAuthException catch (e) {
-        // Tratar erros de autenticação
-        print('Error: ${e.message}');
+        _showErrorDialog(e.message ?? 'Ocorreu um erro desconhecido');
+      } catch (e) {
+        _showErrorDialog('Ocorreu um erro desconhecido');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Erro'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -115,6 +142,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
               ),
               const SizedBox(height: 20),
+              TextFormField(
+                controller: _confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirmar Senha',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, confirme sua senha.';
+                  }
+                  if (value != _passwordController.text) {
+                    return 'As senhas não coincidem.';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
               SwitchListTile(
                 title: const Text('Sou nutricionista'),
                 value: _isNutritionist,
@@ -125,10 +170,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Cadastrar'),
-              ),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _register,
+                      child: const Text('Cadastrar'),
+                    ),
             ],
           ),
         ),

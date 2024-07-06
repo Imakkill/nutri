@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutriplus/screens/auth/login_screen.dart'; // Ajuste o caminho conforme necessário
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,7 +11,7 @@ class HomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               const Color.fromARGB(255, 255, 255, 255),
-              Colors.green.shade400
+              Colors.green.shade400,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -23,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/logo.png',
+                'assets/images/logo_bg.png',
                 width: 200,
                 height: 200,
               ),
@@ -39,11 +38,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()),
-                  );
+                  Navigator.pushNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade600,

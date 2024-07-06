@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
-  final Function(String, String) onSubmit;
+  final void Function(String email, String password, bool stayLoggedIn)
+      onSubmit;
 
-  const LoginForm({required this.onSubmit, super.key});
+  const LoginForm({super.key, required this.onSubmit});
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  LoginFormState createState() => LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
+  bool _stayLoggedIn = false;
 
   @override
   void dispose() {
@@ -24,7 +25,11 @@ class _LoginFormState extends State<LoginForm> {
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
-      widget.onSubmit(_emailController.text, _passwordController.text);
+      widget.onSubmit(
+        _emailController.text,
+        _passwordController.text,
+        _stayLoggedIn,
+      );
     }
   }
 
@@ -34,40 +39,10 @@ class _LoginFormState extends State<LoginForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Image.asset(
-            'assets/images/logo.png',
-            width: 220,
-            height: 220,
-          ),
-          const Text(
-            'Bem-vindo!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Faça login ou crie uma nova conta',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 32.0),
+        children: <Widget>[
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              prefixIcon: const Icon(Icons.email),
-            ),
+            decoration: const InputDecoration(labelText: 'Email'),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -79,27 +54,11 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 20),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: 'Senha',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              prefixIcon: const Icon(Icons.lock),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              ),
-            ),
-            obscureText: !_isPasswordVisible,
+            decoration: const InputDecoration(labelText: 'Senha'),
+            obscureText: true,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Por favor, insira sua senha.';
@@ -110,41 +69,20 @@ class _LoginFormState extends State<LoginForm> {
               return null;
             },
           ),
-          const SizedBox(height: 32.0),
+          const SizedBox(height: 20),
+          CheckboxListTile(
+            title: const Text('Manter-me logado'),
+            value: _stayLoggedIn,
+            onChanged: (value) {
+              setState(() {
+                _stayLoggedIn = value ?? false;
+              });
+            },
+          ),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _submit,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              textStyle: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            child: const Text('Login'),
-          ),
-          const SizedBox(height: 16.0),
-          OutlinedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/register');
-            },
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              side: const BorderSide(
-                color: Colors.blue,
-                width: 2,
-              ),
-              textStyle: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            child: const Text('Cadastrar'),
+            child: const Text('Entrar'),
           ),
         ],
       ),

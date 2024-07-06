@@ -9,9 +9,8 @@ class NutritionistHomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Feed dos Pacientes'),
       ),
-      body: Center(
-        child: const Text(
-            'Aqui será exibido o feed com as postagens dos pacientes.'),
+      body: const Center(
+        child: Text('Aqui será exibido o feed com as postagens dos pacientes.'),
       ),
     );
   }
