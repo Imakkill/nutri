@@ -2,128 +2,172 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/auth_service.dart';
-import '../../widgets/login_form.dart';
-import '../auth/register_screen.dart';
+import 'package:nutriplus/screens/home/patient_home_screen.dart';
+import 'package:nutriplus/screens/home/nutritionist_home_screen.dart'; // Certifique-se de ter essa tela
+import 'register_screen.dart'; // Certifique-se de ter essa tela
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _rememberMe = false;
 
-  void _showErrorDialog(String errorCode) {
-    String message;
-    switch (errorCode) {
-      case 'user-not-found':
-        message = 'Nenhum usuário encontrado para este email.';
-        break;
-      case 'wrong-password':
-        message = 'Senha incorreta fornecida.';
-        break;
-      case 'invalid-email':
-        message = 'O email fornecido é inválido.';
-        break;
-      default:
-        message = 'Ocorreu um erro desconhecido. Tente novamente.';
-        break;
-    }
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Erro'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Future<void> _signIn(String email, String password, bool stayLoggedIn) async {
     try {
-      await FirebaseAuth.instance.setPersistence(
-        stayLoggedIn ? Persistence.LOCAL : Persistence.SESSION,
+      UserCredential userCredential = await _authService.login(
+        _emailController.text,
+        _passwordController.text,
       );
 
-      UserCredential userCredential =
-          await _authService.signIn(email, password);
+      if (!mounted) return;
 
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      // Verifica se o usuário é nutricionista ou paciente
+      User? user = userCredential.user;
+      DocumentSnapshot userData = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userCredential.user?.uid)
+          .doc(user?.uid)
           .get();
-      bool isNutritionist = userDoc['isNutritionist'];
 
-      if (!mounted) return; // Verifique se o widget ainda está montado
+      if (!mounted) return;
 
-      // Navegação para a tela apropriada após login bem-sucedido
-      Navigator.pushReplacementNamed(
-        context,
-        isNutritionist ? '/nutritionistHome' : '/patientHome',
-      );
+      bool isNutritionist = userData['isNutritionist'];
+
+      if (isNutritionist) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const NutritionistHomeScreen()), // Certifique-se de ter essa tela
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PatientHomeScreen()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      if (mounted) _showErrorDialog(e.code);
-    } catch (e) {
-      if (mounted) _showErrorDialog('unknown-error');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao fazer login: ${e.message}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login / Cadastro'),
-      ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.white, Colors.green],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 18, 0, 68),
+              Color.fromRGBO(33, 150, 243, 1),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/images/logo_bg.png', // Certifique-se de que o caminho do arquivo esteja correto
+                height: 200, // Ajuste o tamanho conforme necessário
               ),
-            ),
+              const SizedBox(height: 20),
+              const Text(
+                'Nutri+',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Senha',
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _rememberMe,
+                    onChanged: (value) {
+                      setState(() {
+                        _rememberMe = value ?? false;
+                      });
+                    },
+                  ),
+                  const Text(
+                    'Lembrar-me',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _login,
+                      child: const Text('Login'),
+                    ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen()),
+                  );
+                },
+                child: const Text(
+                  'Registrar',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Image.asset('assets/images/logo_bg.png'),
-                ),
-                const SizedBox(height: 20),
-                LoginForm(
-                  onSubmit: (email, password, stayLoggedIn) =>
-                      _signIn(email, password, stayLoggedIn),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegisterScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text('Registrar'),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

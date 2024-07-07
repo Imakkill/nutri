@@ -7,11 +7,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color.fromARGB(255, 255, 255, 255),
-              Colors.green.shade400,
+              Color.fromARGB(255, 255, 255, 255),
+              Color.fromARGB(255, 51, 104, 202),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -23,16 +23,16 @@ class HomeScreen extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/logo_bg.png',
-                width: 200,
-                height: 200,
+                width: 300,
+                height: 300,
               ),
               const SizedBox(height: 20),
-              Text(
+              const Text(
                 'Nutri+',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green.shade900,
+                  color: Color.fromARGB(255, 1, 0, 54),
                 ),
               ),
               const SizedBox(height: 40),
@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade600,
+                  backgroundColor: const Color.fromARGB(255, 1, 0, 54),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   textStyle: const TextStyle(fontSize: 18),
