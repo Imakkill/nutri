@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../auth/login_screen.dart'; // Certifique-se de ajustar o caminho conforme necessário
+import '../auth/login_screen.dart';
+import '../profile/patient_profile_screen.dart'; // Certifique-se de ajustar o caminho conforme necessário
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({super.key});
@@ -64,7 +65,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.greenAccent],
+            colors: [Colors.white, Color.fromARGB(255, 45, 140, 230)],
           ),
         ),
         child: Stack(
@@ -77,7 +78,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
               right: 20.0, // Ajuste a distância da direita
               child: FloatingActionButton(
                 onPressed: () {},
-                backgroundColor: Colors.green,
+                backgroundColor: const Color.fromARGB(255, 181, 196, 238),
                 child: const Icon(Icons.add),
               ),
             ),
@@ -86,7 +87,8 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 4,
-        color: Colors.greenAccent, // Fundo em um verde mais claro
+        color: const Color.fromARGB(
+            255, 51, 104, 202), // Fundo em um verde mais claro
         shape:
             const CircularNotchedRectangle(), // Pode usar uma forma se quiser
         child: Row(
@@ -94,7 +96,11 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
           children: [
             IconButton(
               onPressed: () {
-                // Navegar para o perfil do usuário
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PatientProfileScreen()),
+                );
               },
               icon: const Icon(Icons.person),
               color: Colors.white,
