@@ -88,7 +88,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Color.fromARGB(255, 45, 140, 230)],
+            colors: [
+              Color.fromARGB(255, 18, 0, 68),
+              Color.fromRGBO(46, 62, 209, 1)
+            ],
           ),
         ),
         child: Center(
@@ -98,6 +101,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text(
+                    'Cadastro',
+                    style: TextStyle(
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                   TextFormField(
                     controller: _nameController,
                     decoration: const InputDecoration(
@@ -142,15 +153,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   CheckboxListTile(
-                    title: const Text('Sou nutricionista'),
-                    value: _isNutritionist,
+                    title: const Text(
+                      'Sou nutricionista',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    value: _isNutritionist, 
                     onChanged: (bool? value) {
                       setState(() {
                         _isNutritionist = value ?? false;
                       });
                     },
-                    activeColor: const Color.fromARGB(255, 45, 140, 230),
-                    checkColor: Colors.white,
+                    
+                    activeColor: const Color.fromARGB(255, 32, 91, 219),
+                    checkColor: const Color.fromARGB(255, 255, 255, 255),
                   ),
                   const SizedBox(height: 20),
                   _isLoading

@@ -52,7 +52,7 @@ class PatientProfileScreenState extends State<PatientProfileScreen> {
                     const CircleAvatar(
                       radius: 50,
                       backgroundImage:
-                          AssetImage('assets/profile_placeholder.png'),
+                          AssetImage('assets/images/profile_placeholder.png'),
                     ),
                     const SizedBox(height: 20),
                     Text(
