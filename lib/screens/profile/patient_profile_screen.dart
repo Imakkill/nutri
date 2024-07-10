@@ -40,7 +40,10 @@ class PatientProfileScreenState extends State<PatientProfileScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Color.fromARGB(255, 45, 140, 230)],
+            colors: [
+              Color.fromARGB(255, 18, 0, 68),
+              Color.fromRGBO(46, 62, 209, 1)
+            ],
           ),
         ),
         child: Center(

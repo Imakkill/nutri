@@ -4,6 +4,7 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/home/patient_home_screen.dart'; // Corrigido o caminho
 import 'screens/profile/patient_profile_screen.dart'; // Corrigido o caminho
+import 'screens/patient/patient_meals_screen.dart'; // Adicionada a importação
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterScreen(),
         '/patientHome': (context) => const PatientHomeScreen(),
         '/patientProfile': (context) => const PatientProfileScreen(),
+        '/patientMeals': (context) =>
+            const PatientMealsScreen(), // Adicionada a nova rota
       },
     );
   }

@@ -81,7 +81,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrar'),
+        title: const Text(
+          'Registrar',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 18, 0, 68),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -159,13 +165,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    value: _isNutritionist, 
+                    value: _isNutritionist,
                     onChanged: (bool? value) {
                       setState(() {
                         _isNutritionist = value ?? false;
                       });
                     },
-                    
                     activeColor: const Color.fromARGB(255, 32, 91, 219),
                     checkColor: const Color.fromARGB(255, 255, 255, 255),
                   ),

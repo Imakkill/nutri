@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../auth/login_screen.dart';
-import '../profile/patient_profile_screen.dart'; // Certifique-se de ajustar o caminho conforme necessário
+import '../profile/patient_profile_screen.dart';
+import 'package:nutriplus/screens/patient/patient_diet_plan_screen.dart'; // Certifique-se de ajustar o caminho conforme necessário
+import 'package:nutriplus/screens/patient/patient_meals_screen.dart'; // Certifique-se de ajustar o caminho conforme necessário
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({super.key});
@@ -52,7 +54,7 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Minha Dieta'),
+        title: const Text('Minhas Refeições'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -71,13 +73,19 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
         child: Stack(
           children: [
             const Center(
-              child: Text('Aqui será exibida a dieta do paciente.'),
+              child: Text('Aqui será exibida as refeições do paciente.'),
             ),
             Positioned(
               bottom: 20.0, // Ajuste a distância do fundo
               right: 20.0, // Ajuste a distância da direita
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PatientMealsScreen()),
+                  );
+                },
                 backgroundColor: const Color.fromARGB(255, 181, 196, 238),
                 child: const Icon(Icons.add),
               ),
@@ -107,14 +115,22 @@ class PatientHomeScreenState extends State<PatientHomeScreen> {
             ),
             IconButton(
               onPressed: () {
-                // Navegar para a home
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PatientHomeScreen()),
+                );
               },
               icon: const Icon(Icons.home),
               color: Colors.white,
             ),
             IconButton(
               onPressed: () {
-                // Navegar para o plano alimentar
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PatientDietPlanScreen()),
+                );
               },
               icon: const Icon(Icons.restaurant_menu),
               color: Colors.white,
