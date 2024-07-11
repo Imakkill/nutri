@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
-import 'screens/home/patient_home_screen.dart'; // Corrigido o caminho
-import 'screens/profile/patient_profile_screen.dart'; // Corrigido o caminho
-import 'screens/patient/patient_meals_screen.dart'; // Adicionada a importação
+import 'screens/home/patient_home_screen.dart';
+import 'screens/profile/patient_profile_screen.dart';
+import 'screens/home/nutritionist_home_screen.dart';
+import 'screens/nutritionist/patient_posts_screen.dart.dart';
+import 'screens/nutritionist/add_patient_screen.dart'; // Adicionado
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +30,10 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterScreen(),
         '/patientHome': (context) => const PatientHomeScreen(),
         '/patientProfile': (context) => const PatientProfileScreen(),
-        '/patientMeals': (context) =>
-            const PatientMealsScreen(), // Adicionada a nova rota
+        '/nutritionistHome': (context) => const NutritionistHomeScreen(),
+        '/patientPosts': (context) => const PatientPostsScreen(
+            patientName: 'Paciente'), // Ajuste conforme necessário
+        '/addPatient': (context) => const AddPatientScreen(), // Adicionado
       },
     );
   }
