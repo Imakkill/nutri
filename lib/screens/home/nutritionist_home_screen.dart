@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nutriplus/screens/nutritionist/add_patient_screen.dart';
-import 'package:nutriplus/screens/nutritionist/patient_posts_screen.dart.dart'; // Ajuste o caminho conforme necessário
+// Ajuste o caminho conforme necessário
+import 'package:nutriplus/screens/nutritionist/add_food_screen.dart'; // Certifique-se de que este caminho está correto
+import 'package:nutriplus/screens/nutritionist/edit_patient_sceen.dart'; // Certifique-se de que este caminho está correto
 
 class NutritionistHomeScreen extends StatefulWidget {
   const NutritionistHomeScreen({super.key});
@@ -85,8 +87,10 @@ class NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              PatientPostsScreen(patientName: patient['name']),
+                          builder: (context) => EditPatientScreen(
+                            patientId: patient.id,
+                            patientName: patient['name'],
+                          ),
                         ),
                       );
                     },
@@ -95,6 +99,33 @@ class NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
               },
             );
           },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                // Adicione a navegação para a home screen se necessário
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.food_bank),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const AddFoodScreen(patientId: 'examplePatientId'),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

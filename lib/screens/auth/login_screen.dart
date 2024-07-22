@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/auth_service.dart';
-import 'package:nutriplus/screens/home/patient_home_screen.dart';
-import 'package:nutriplus/screens/home/nutritionist_home_screen.dart'; // Certifique-se de ter essa tela
+import '../home/patient_home_screen.dart';
+import '../home/nutritionist_home_screen.dart'; // Certifique-se de ter essa tela
 import 'register_screen.dart'; // Certifique-se de ter essa tela
 
 class LoginScreen extends StatefulWidget {
